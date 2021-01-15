@@ -1,0 +1,54 @@
+<div class="row mt-5 justify-content-center">
+    <div class="col-md-5 mb-5">
+        <div *ngIf="selectedProduct == undefined; then productLoading else showProductDetail "></div>
+    </div>
+</div>
+
+
+
+
+
+
+<ng-template #productLoading>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+</ng-template>
+
+
+
+
+<ng-template #showProductDetail>
+    <div *ngIf="selectedProduct.id == 0; then productNotFound else ProductDetail"></div>
+</ng-template>
+
+
+
+<ng-template #productNotFound>
+    <div class="alert alert-danger">Ürün Bulunamadı.</div>
+</ng-template>
+
+
+
+<ng-template #ProductDetail>
+    <div class="row">
+        <div class="col-md-10">
+            <h5 class="text-center">Product  Detail</h5>
+        </div>
+        <div class="col-md-2">
+            <span class="close" (click)="ResetSelectedProductID()" [routerLink]="['/Products']">X</span>
+        </div>
+    </div>
+    
+    <p class="text-center"><b>Id : </b>{{selectedProduct.id}} </p>
+    <p class="text-center"><b>Name : </b> {{selectedProduct.name}} </p>
+    <p class="text-center"><b>Price : </b>  {{selectedProduct.price}} </p>
+    <p class="text-center"><b>Stock : </b>  {{selectedProduct.stock}} </p>
+    <p class="text-center"><b>Description : </b>  {{selectedProduct.description}} </p>
+    <p class="text-center"><b>Created : </b>  {{selectedProduct.created | date:'dd/MM/yy , HH:mm'}} </p>
+    <p class="text-center"><b>Category : </b> {{selectedProduct.category.name}} </p>
+</ng-template>
+
+

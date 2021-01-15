@@ -1,0 +1,144 @@
+<div class="row mt-5 justify-content-center">
+    <div class="col-md-10">
+
+        <div *ngIf="this.products; then listProducts else productsLoading "></div>
+
+
+        <ng-template #productsLoading>
+            <div class="alert alert-primary">
+                Ürünler Yükleniyor...
+            </div>
+        </ng-template>
+
+
+        <ng-template #listProducts>
+
+            <h4 class="text-center">Products</h4>
+
+            <div class="form-group mb-4">
+                <select #categoryFilter (change)="this.GetProductsByCategory(categoryFilter.value)" class="form-control">
+                    <option value=0>Tümünü Listele</option>
+                    <option *ngFor="let category of categories" value={{category.id}}>{{category.name}} ( {{category.products.length}} )</option>
+                </select>
+            </div>
+
+            <div class="input-group mb-5">
+                <input #searchProductInput (input)="GetProductsByName(searchProductInput.value)" type="text" class="form-control" placeholder="Search" aria-label="Amount (to the nearest dollar)">
+                <div class="input-group-append">
+                  <span class="input-group-text">Search</span>
+                </div>
+              </div>
+            
+            <div class="row">
+                <div class="col-md-10">
+                    <span>Toplamda <b> {{this.products.length}}</b> Ürün Listelendi</span>
+                </div>
+                <div class="col-md-2">
+                    <button class="ml-3 btn btn-sm btn-success" (click)="OpenEditModal(0,editProductModal)">Add Product</button>
+                </div>
+            </div>
+            <table class="table table-hover table-striped mt-1 mb-5">
+                <thead class="text-center">
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Description</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let product of products; trackBy:trackByFn" [class.bg-primary]="selectedProductID == product.id">
+                        <td> {{product.name}} </td>
+                        <td> {{product.price}} </td>
+                        <td> {{product.stock}} </td>
+                        <td> {{(product.description == "" || !product.description) ? "Açıklama Bulunamadı." : (product.description)}} </td>    
+                        <td> {{product.created | date: 'dd/MM/yy, HH:mm'}} </td>
+                        <td>
+                            <button (click)="SetSelectedProductID(product.id)" [routerLink]="['/Products','Detail', product.id]" class="btn btn-sm btn-secondary">Detail</button>
+                            <button (click)="OpenEditModal(product.id,editProductModal)" class="ml-2 btn btn-sm btn-primary">Update</button>
+                            <button (click)="OpenDeleteModal(product.id, deleteProductModal)" class="ml-2 btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <router-outlet></router-outlet>
+        </ng-template>
+
+
+
+        <ng-template #editProductModal let-modal>
+            <div class="modal-header">
+              <h4 class="modal-title" id="modal-basic-title"> {{(selectedProductID === 0) ? "Add Product" : "Update Product"}} </h4>
+              <button type="button" class="close" aria-label="Close" (click)="CloseEditModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <edit-product (updateProducts)="GetAllProductsWithInclude()" (closeEditModal)="CloseEditModal()" [selectedProductID]="selectedProductID"></edit-product>
+
+            </div>
+          </ng-template>
+
+
+
+          <ng-template #deleteProductModal let-modal>
+            <div class="modal-header">
+              <h4 class="modal-title" id="modal-basic-title">Delete Product</h4>
+              <button type="button" class="close" aria-label="Close" (click)="CloseEditModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+
+              <div class="alert alert-danger" *ngIf="responseError != undefined">
+                    <b> {{responseError}} </b>
+              </div>
+
+
+              <div *ngIf="responseError == undefined">
+              <table class="table table-sm table-hover" >
+                  <tr>
+                      <td> ID : </td>
+                      <td> {{selectedProduct.id}} </td>
+                  </tr>
+
+                  <tr>
+                    <td> Name : </td>
+                    <td> {{selectedProduct.name}} </td>
+                </tr>
+
+                <tr>
+                    <td> Price : </td>
+                    <td> {{selectedProduct.price}} </td>
+                </tr>
+
+                <tr>
+                    <td> Stock : </td>
+                    <td> {{selectedProduct.stock}} </td>
+                </tr>
+
+                <tr>
+                    <td> Category : </td>
+                    <td> {{selectedProduct.category.name}} </td>
+                </tr>
+
+                <tr>
+                    <td> Description : </td>
+                    <td> {{(selectedProduct.description != null || selectedProduct.description) ? selectedProduct.description : "Açıklama Bulunamadı."}} </td>
+                </tr>
+              </table>
+
+              <button (click)="DeleteProduct()" class="btn btn-danger btn-block">Delete</button>
+
+            </div>
+
+            </div>
+          </ng-template>
+
+    </div>
+
+</div>

@@ -1,0 +1,100 @@
+
+
+
+    
+   <div class="alert alert-danger" *ngIf="responseError != undefined">
+       <b> {{responseError}} </b>
+   </div>
+
+
+   <div *ngIf="validationErrors != undefined">
+       <ul>
+           <li class="text-danger" *ngFor="let validation of validationErrors"> {{validation}} </li>
+       </ul>
+   </div>
+
+
+
+    <form [formGroup]="editProductForm" *ngIf="editProductForm" (ngSubmit)="EditProduct()">
+ 
+        
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" formControlName="name" placeholder="Name"
+            [class.is-invalid]="isFormSubmitted && formControls.name.errors"
+            [class.is-valid]="isFormSubmitted && !formControls.name.errors">
+
+            <div class="invalid-feedback" *ngIf="formControls.name.errors">
+                <span *ngIf="formControls.name.errors.required">Please Enter Product Name.</span>
+                <span *ngIf="formControls.name.errors.minlength || formControls.name.errors.maxlength">Product Name Must Be 3-40 Character.</span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label>Price</label>
+            <input type="number" class="form-control" formControlName="price" placeholder="Price"
+            [class.is-invalid]="isFormSubmitted && formControls.price.errors"
+            [class.is-valid]="isFormSubmitted && !formControls.price.errors">
+
+
+            <div class="invalid-feedback" *ngIf="formControls.price.errors">
+                <span *ngIf="formControls.price.errors.required">Please Enter Product Price.</span>
+                <span *ngIf="formControls.price.errors.min">Product Price Cant be 0.</span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label>Stock</label>
+            <input type="number" class="form-control" formControlName="stock" placeholder="Stock"
+            [class.is-invalid]="isFormSubmitted && formControls.stock.errors"
+            [class.is-valid]="isFormSubmitted && !formControls.stock.errors">
+
+            <div class="invalid-feedback" *ngIf="formControls.stock.errors">
+                <span *ngIf="formControls.stock.errors.required">Please Enter Product Stock.</span>
+                <span *ngIf="formControls.stock.errors.min">Product Stock Cant be 0.</span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label>Category</label>
+            <select class="form-control" formControlName="categoryId"
+            [class.is-invalid]="isFormSubmitted && formControls.categoryId.errors"
+            [class.is-valid]="isFormSubmitted && !formControls.categoryId.errors">
+
+                <option value = "0">Category</option>
+                <option *ngFor="let category of categories" value="{{category.id}}"> {{category.name}} </option>
+            </select>
+
+
+            <div class="invalid-feedback" *ngIf="formControls.categoryId.errors">
+                <span *ngIf="formControls.categoryId.errors.required">Please Enter Product Category.</span>
+                <span *ngIf="formControls.categoryId.errors.min">Product Category Cant be 0.</span>
+            </div>
+        </div>
+
+
+        <a *ngIf="this.isDescriptionActive === false" class="text-primary ml-2" (click)="AddDescriptionFormControl()">Add Description</a>
+
+
+        <div class="form-group" *ngIf="this.isDescriptionActive === true">
+            <label>Description</label>
+            <textarea type="text" class="form-control" formControlName="description" placeholder="Description"></textarea>
+        </div>
+
+        <button type="submit" class="mt-4 btn btn-block btn-primary"
+            [class.bg-success]="selectedProductID === 0"
+            [class.bg-primary]="selectedProductID !== 0">
+            {{(selectedProductID === 0) ? "Add Product" : "Update Product"}}
+            
+        </button>
+    </form>
+
+   
+
+
+
+
+ 

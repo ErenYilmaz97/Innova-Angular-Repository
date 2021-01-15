@@ -1,0 +1,123 @@
+<div class="row mt-5 justify-content-center">
+    <div class="col-md-10">
+        <div *ngIf="this.categories then listCategories; else categoriesLoading"></div>
+    </div>
+</div>
+
+
+
+<ng-template #categoriesLoading>
+    <div class="alert alert-primary">
+        Kateogriler Yükleniyor...
+    </div>
+</ng-template>
+
+
+<ng-template #listCategories>
+
+    <h4 class="text-center">Categories</h4>
+
+    <div class="input-group mb-5">
+        <input #searchCategoryInput (input)="GetProductsByName(searchCategoryInput.value)" type="text" class="form-control" placeholder="Search" aria-label="Amount (to the nearest dollar)">
+        <div class="input-group-append">
+          <span class="input-group-text">Search</span>
+        </div>
+      </div>
+
+
+    <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <button (click)="OpenEditModal(0,editCategoryModal)" class="btn btn-sm btn-success ml-5 mb-1">Add Category</button>
+        </div>
+    </div>
+
+    <table class="table table-hover table-striped mb-5">
+        <thead class="text-center">
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Product Count</th>
+            <th>Actions</th>
+        </thead>
+
+        <tbody class="text-center">
+            <tr *ngFor="let category of categories; trackBy:trackByFn" [class.bg-primary]="this.selectedCategoryID === category.id">
+                <td> {{category.name}} </td>
+                <td> {{(!category.description || category.description =="" ? "Açıklama Bulunamadı." : category.description )}} </td>
+                <td> {{category.created |date:'dd/MM/yy, HH:mm'}} </td>
+                <td> {{category.products.length}} </td>
+                <td>
+                    <button (click)="SetSelectedCategoryID(category.id)" [routerLink]="['/Categories','Detail', category.id]" class="btn btn-sm btn-secondary">Detail</button>
+                    <button (click)="OpenEditModal(category.id, editCategoryModal)" class="ml-2 btn btn-sm btn-primary">Update</button>
+                    <button (click)="OpenDeleteModal(category.id,deleteCategoryModal)" class="ml-2 btn btn-sm btn-danger">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <router-outlet></router-outlet>
+</ng-template>
+
+
+
+<ng-template #editCategoryModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title"> {{(selectedCategoryID === 0) ? "Add Category" : "Update Category"}} </h4>
+      <button type="button" class="close" aria-label="Close" (click)="CloseEditModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <edit-category [selectedCategoryID]="this.selectedCategoryID" (updateCategories)="this.GetAllCategories()"
+      (closeModal)="this.CloseEditModal()" (setSelectedCategoryID)="SetSelectedCategoryID()"></edit-category>
+
+    </div>
+  </ng-template>
+
+
+
+  <ng-template #deleteCategoryModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title"> Delete Category </h4>
+      <button type="button" class="close" aria-label="Close" (click)="CloseEditModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+        <div class="alert alert-danger" *ngIf="this.responseError !== undefined">
+            <b> {{responseError}} </b>
+        </div>
+
+        <div *ngIf="this.responseError === undefined">
+            <table class="table table-sm table-hover" >
+                <tr>
+                    <td> ID : </td>
+                    <td> {{selectedCategory.id}} </td>
+                </tr>
+
+                <tr>
+                    <td> Name : </td>
+                    <td> {{selectedCategory.name}} </td>
+                </tr>
+
+                <tr>
+                    <td> Description : </td>
+                    <td> {{(selectedCategory.description != null && selectedCategory.description) ? selectedCategory.description : "Açıklama Bulunamadı."}} </td>
+                </tr>
+
+                <tr>
+                    <td> Created : </td>
+                    <td> {{selectedCategory.created |date:'dd/MM/yy, HH:mm'}} </td>
+                </tr>
+            </table>
+
+            <button (click)="DeleteCategory()" class="btn btn-block btn-danger">Delete Category</button>
+        </div>
+      
+    </div>
+  </ng-template>
+

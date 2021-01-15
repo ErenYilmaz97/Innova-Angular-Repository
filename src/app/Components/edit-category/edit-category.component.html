@@ -1,0 +1,41 @@
+<div class="alert alert-danger" *ngIf="this.responseError !== undefined">
+    <b> {{this.responseError}} </b>
+</div>
+
+
+<div *ngIf="this.validationErrors !== undefined">
+<ul>
+    <li *ngFor="let validation of validationErrors" class="text-danger">
+        {{validation}}
+    </li>
+</ul>
+</div>
+
+
+<form [formGroup]="editCategoryForm" *ngIf="editCategoryForm" (ngSubmit)="EditCategory()">
+    
+<div class="form-group">
+    <label>Name</label>
+    <input type="text" class="form-control" formControlName="name" placeholder="Name"
+    [class.is-invalid]="isFormSubmitted && name.errors"
+    [class.is-valid]="isFormSubmitted && !name.errors">
+
+    <div class="invalid-feedback" *ngIf="name.errors">
+        <span *ngIf="name.errors.required">Please Enter Category Name.</span>
+        <span *ngIf="name.errors.minlength || name.errors.maxlength">Category Name Must Be 3-30 Character.</span>
+    </div>
+</div>
+
+
+<a *ngIf="this.isDescriptionActive === false" class="text-primary ml-2" (click)="AddDescriptionFormControl()">Add Description</a>
+
+<div class="form-group" *ngIf="this.isDescriptionActive === true">
+    <label>Description</label>
+    <textarea class="form-control" placeholder="Description" formControlName="description"></textarea> 
+</div>
+
+
+<button type="submit" class=" mt-4 btn btn-block" [class.btn-success]="this.selectedCategoryID===0"
+[class.btn-primary]="this.selectedCategoryID !== 0"> {{(this.selectedCategoryID === 0) ? "Add Category": "Update Category"}} </button>
+
+</form>

@@ -1,0 +1,49 @@
+<div class="row justify-content-center">
+    <div class="col-md-5 mb-5">
+
+        <div *ngIf="this.selectedCategory === undefined; then categoryLoading else showCategoryDetail"></div>
+
+    </div>
+</div>
+
+
+<ng-template #categoryLoading>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+</ng-template>
+
+
+<ng-template #showCategoryDetail>
+
+    <div *ngIf="this.responseError === undefined; then CategoryDetail; else showResponseEror"></div>
+
+</ng-template>
+
+
+
+
+
+<ng-template #showResponseEror>
+    <div class="alert alert-danger"><b> {{responseError}} </b></div>
+</ng-template>
+
+
+<ng-template #CategoryDetail>
+    <div class="row">
+        <div class="col-md-10">
+            <h5 class="text-center">Category  Detail</h5>
+        </div>
+        <div class="col-md-2">
+            <span class="close" [routerLink]="['/Categories']">X</span>
+        </div>
+    </div>
+    
+    <p class="text-center"><b>Id : </b>{{selectedCategory.id}} </p>
+    <p class="text-center"><b>Name : </b> {{selectedCategory.name}} </p>
+    <p class="text-center"><b>Description : </b>  {{selectedCategory.description}} </p>
+    <p class="text-center"><b>Created : </b>  {{selectedCategory.created | date:'dd/MM/yy , HH:mm'}} </p>
+    <p class="text-center"><b>Category : </b> {{selectedCategory.products.length}} </p>
+</ng-template>
