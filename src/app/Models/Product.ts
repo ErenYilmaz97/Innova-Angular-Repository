@@ -15,13 +15,7 @@ export class Product{
         //NAVIGATION PROPERTY
         public category?:Category
 
-    ){
-
-        if(!this.categoryId)
-            this.categoryId = 0;
-
-        this.id = 0;
-    }
+    ){}
 
     
 }
