@@ -50,6 +50,8 @@ const appRoutes:Routes = [
     RouterModule.forRoot(appRoutes),
     NgbModule,
     BrowserAnimationsModule,
+
+    //TOASTR ALERT CONFIGURATION
     ToastrModule.forRoot({
 
       timeOut:600,
